@@ -1,0 +1,25 @@
+# Local Samsung source drops
+/source/
+/kernel_source/
+/platform_source/
+/*.zip
+/*.tar.gz
+
+# Kernel build outputs
+/out/
+/build.log
+*.ko
+*.mod
+*.mod.c
+*.cmd
+*.o
+*.a
+*.order
+Module.symvers
+modules.builtin
+modules.builtin.modinfo
+
+# Local OS/editor files
+.DS_Store
+*.swp
+
