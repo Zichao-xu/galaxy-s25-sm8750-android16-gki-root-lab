@@ -28,3 +28,17 @@ Useful external clues:
   cause.
 - Built-in root behavior is the primary suspect.
 
+
+## Candidate Root Implementations
+
+Current preferred test order:
+
+1. Stock Samsung Android 16 kernel build with no root.
+2. Minimal KernelSU Next built-in root, without SuSFS or extra patches.
+3. Add SuSFS only if the minimal built-in root build passes PairIP apps.
+4. Use ReSukiSU / SukiSU Ultra as follow-up candidates, not as mandatory base.
+5. Keep APatch as an alternate root-family experiment if KernelSU-family built-in
+   root cannot pass PairIP reliably.
+
+ReSukiSU and Kokuban remain useful references for CI, Samsung packaging,
+AnyKernel flow, SuSFS patches, and S25-specific integration details.

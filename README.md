@@ -1,9 +1,9 @@
-# Galaxy S25 SM8750 Android 16 GKI ReSukiSU Experiments
+# Galaxy S25 SM8750 Android 16 GKI Root Lab
 
 Experimental Samsung Galaxy S25 series / SM8750 Android 16 GKI kernel workspace. Current test device: SM-S937B.
 
 
-The goal is to build a clean Android 16 based kernel path for ReSukiSU / KernelSU
+The goal is to build a clean Android 16 based kernel path for root
 experiments, instead of continuing to patch an Android 15 / 6.6.77 base on an
 Android 16 system.
 
@@ -20,7 +20,7 @@ Android 16 system.
 ## Current Problem
 
 PairIP protected apps crash in `libpairipcore.so` under built-in
-ReSukiSU/Kokuban style GKI root, while LKM mode works.
+built-in GKI root, while LKM mode works.
 
 Observed facts:
 
@@ -41,7 +41,7 @@ Working hypothesis:
 
 1. Preserve the exact Samsung Android 16 source package metadata.
 2. Reproduce a clean stock build path from Samsung source.
-3. Add a minimal ReSukiSU / KernelSU integration.
+3. Add a minimal root integration.
 4. Test PairIP apps before adding SuSFS or additional patches.
 5. Add SuSFS only after the minimal built-in root build is proven.
 
