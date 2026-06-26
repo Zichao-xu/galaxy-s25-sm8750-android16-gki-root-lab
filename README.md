@@ -1,6 +1,7 @@
-# S937B Android 16 GKI ReSukiSU Experiments
+# Galaxy S25 SM8750 Android 16 GKI ReSukiSU Experiments
 
-Experimental Samsung Galaxy S25 Edge / SM-S937B Android 16 GKI kernel workspace.
+Experimental Samsung Galaxy S25 series / SM8750 Android 16 GKI kernel workspace. Current test device: SM-S937B.
+
 
 The goal is to build a clean Android 16 based kernel path for ReSukiSU / KernelSU
 experiments, instead of continuing to patch an Android 15 / 6.6.77 base on an
@@ -8,7 +9,8 @@ Android 16 system.
 
 ## Device Baseline
 
-- Device: Samsung SM-S937B
+- Device family: Samsung Galaxy S25 series / SM8750
+- Current test device: Samsung SM-S937B
 - Current firmware family: Android 16 / OneUI 8.x
 - Samsung open source package: `SM-S937B_16_Opensource.zip`
 - Matched Samsung source row:
