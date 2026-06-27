@@ -50,9 +50,27 @@ jobs:
           unzip -q source-drop/SM-S937B_16_Opensource.zip -d samsung-source
           sha256sum samsung-source/Kernel.tar.gz samsung-source/Platform.tar.gz
           tar -xzf samsung-source/Kernel.tar.gz -C kernel-work
+          grep -R "^VERSION =\|^PATCHLEVEL =\|^SUBLEVEL =" -n \
+            kernel-work/kernel_platform/common/Makefile \
+            kernel-work/kernel_platform/msm-kernel/Makefile
           mkdir -p kernel-work/out/target/product/psq
           mkdir -p kernel-work/kernel_platform/prebuilts/build-tools/path/linux-x86
           ln -sf /usr/bin/python3 kernel-work/kernel_platform/prebuilts/build-tools/path/linux-x86/python3
+          mkdir -p kernel-work/kernel_platform/prebuilts/clang/host/linux-x86/clang-r510928
+          curl -L --fail --retry 3 --retry-delay 10 \
+            -o clang-r510928.tar.gz \
+            https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/tags/android-15.0.0_r3/clang-r510928.tar.gz
+          tar -xzf clang-r510928.tar.gz \
+            -C kernel-work/kernel_platform/prebuilts/clang/host/linux-x86/clang-r510928
+          mkdir -p kernel-work/kernel_platform/prebuilts/clang/host/linux-x86/kleaf
+          curl -L --fail --retry 3 --retry-delay 10 \
+            -o clang-kleaf.tar.gz \
+            https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/tags/android-15.0.0_r3/kleaf.tar.gz
+          tar -xzf clang-kleaf.tar.gz \
+            -C kernel-work/kernel_platform/prebuilts/clang/host/linux-x86/kleaf
+          test -x kernel-work/kernel_platform/prebuilts/clang/host/linux-x86/clang-r510928/bin/clang
+          test -f kernel-work/kernel_platform/prebuilts/clang/host/linux-x86/kleaf/clang_toolchain_repository.bzl
+          kernel-work/kernel_platform/prebuilts/clang/host/linux-x86/clang-r510928/bin/clang --version | head -1
           mkdir -p kernel-work/kernel_platform/prebuilts/kernel-build-tools/bazel/linux-x86_64
           curl -L \
             -o kernel-work/kernel_platform/prebuilts/kernel-build-tools/bazel/linux-x86_64/bazel \
