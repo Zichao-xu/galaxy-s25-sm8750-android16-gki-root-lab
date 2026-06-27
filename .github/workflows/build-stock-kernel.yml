@@ -1,0 +1,81 @@
+name: Build Stock Samsung Kernel
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_target:
+        description: Samsung build target
+        required: true
+        default: psq_eur_openx
+      build_variant:
+        description: Android build variant
+        required: true
+        default: user
+      chipset:
+        description: Samsung/Qualcomm chipset codename used by build script
+        required: true
+        default: sun
+
+jobs:
+  build-stock:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout lab repo
+        uses: actions/checkout@v4
+
+      - name: Install host packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            bc bison build-essential ccache flex git-lfs libelf-dev libssl-dev \
+            lld llvm make ninja-build python3 python3-pip rsync unzip zip zstd \
+            dwarves pahole device-tree-compiler
+
+      - name: Download Samsung source release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download samsung-source-sm-s937b-16 \
+            --repo Zichao-xu/galaxy-s25-sm8750-android16-gki-root-lab \
+            --pattern 'SM-S937B_16_Opensource.zip' \
+            --dir source-drop
+          sha256sum source-drop/SM-S937B_16_Opensource.zip
+          echo '41bf605cc6cc520dd4dfef6459a3c04bdaa889f65379e8c96280412d4894ca3b  source-drop/SM-S937B_16_Opensource.zip' | sha256sum -c -
+
+      - name: Extract Samsung source
+        run: |
+          mkdir -p samsung-source kernel-work
+          unzip -q source-drop/SM-S937B_16_Opensource.zip -d samsung-source
+          sha256sum samsung-source/Kernel.tar.gz samsung-source/Platform.tar.gz
+          tar -xzf samsung-source/Kernel.tar.gz -C kernel-work
+          find kernel-work -maxdepth 2 -type f | sort | head -80
+          du -sh kernel-work
+
+      - name: Build stock kernel
+        working-directory: kernel-work
+        run: |
+          chmod +x build_kernel_GKI.sh || true
+          ./build_kernel_GKI.sh \
+            '${{ inputs.build_target }}' \
+            '${{ inputs.build_variant }}' \
+            '${{ inputs.chipset }}'
+
+      - name: Collect outputs
+        if: always()
+        run: |
+          mkdir -p artifacts/logs artifacts/images artifacts/modules
+          cp -f kernel-work/build.log artifacts/logs/build.log 2>/dev/null || true
+          find kernel-work -type f \( -name Image -o -name Image.gz -o -name Image.lz4 -o -name dtbo.img -o -name '*.dtb' \) -print -exec cp -f {} artifacts/images/ \; 2>/dev/null || true
+          find kernel-work -type f -name '*.ko' -print -exec cp -f {} artifacts/modules/ \; 2>/dev/null || true
+          find artifacts -type f -maxdepth 3 -print | sort
+          tar -czf stock-kernel-artifacts.tar.gz artifacts
+
+      - name: Upload build artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stock-samsung-kernel-${{ inputs.build_target }}-${{ github.run_number }}
+          path: stock-kernel-artifacts.tar.gz
+          retention-days: 14
