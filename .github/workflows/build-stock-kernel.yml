@@ -50,17 +50,24 @@ jobs:
           unzip -q source-drop/SM-S937B_16_Opensource.zip -d samsung-source
           sha256sum samsung-source/Kernel.tar.gz samsung-source/Platform.tar.gz
           tar -xzf samsung-source/Kernel.tar.gz -C kernel-work
+          mkdir -p kernel-work/kernel_platform/prebuilts/build-tools/path/linux-x86
+          ln -sf /usr/bin/python3 kernel-work/kernel_platform/prebuilts/build-tools/path/linux-x86/python3
           find kernel-work -maxdepth 2 -type f | sort | head -80
           du -sh kernel-work
 
       - name: Build stock kernel
         working-directory: kernel-work
         run: |
+          set -o pipefail
           chmod +x build_kernel_GKI.sh || true
           ./build_kernel_GKI.sh \
             '${{ inputs.build_target }}' \
             '${{ inputs.build_variant }}' \
             '${{ inputs.chipset }}'
+          test -f kernel_platform/gki/dist/Image || {
+            echo "::error::kernel_platform/gki/dist/Image was not produced"
+            exit 1
+          }
 
       - name: Collect outputs
         if: always()
