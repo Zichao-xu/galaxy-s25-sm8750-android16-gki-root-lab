@@ -50,6 +50,7 @@ jobs:
           unzip -q source-drop/SM-S937B_16_Opensource.zip -d samsung-source
           sha256sum samsung-source/Kernel.tar.gz samsung-source/Platform.tar.gz
           tar -xzf samsung-source/Kernel.tar.gz -C kernel-work
+          mkdir -p kernel-work/out/target/product/psq
           mkdir -p kernel-work/kernel_platform/prebuilts/build-tools/path/linux-x86
           ln -sf /usr/bin/python3 kernel-work/kernel_platform/prebuilts/build-tools/path/linux-x86/python3
           mkdir -p kernel-work/kernel_platform/prebuilts/kernel-build-tools/bazel/linux-x86_64
@@ -62,6 +63,8 @@ jobs:
 
       - name: Build stock kernel
         working-directory: kernel-work
+        env:
+          USE_BAZEL_VERSION: 7.4.1
         run: |
           set -o pipefail
           chmod +x build_kernel_GKI.sh || true
