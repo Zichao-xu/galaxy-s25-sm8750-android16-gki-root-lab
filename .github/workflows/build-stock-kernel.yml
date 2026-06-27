@@ -58,6 +58,11 @@ jobs:
             -o kernel-work/kernel_platform/prebuilts/kernel-build-tools/bazel/linux-x86_64/bazel \
             https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64
           chmod +x kernel-work/kernel_platform/prebuilts/kernel-build-tools/bazel/linux-x86_64/bazel
+          {
+            echo ''
+            echo '# CI fallback for modules missing from Samsung source drop local BCR.'
+            echo 'common --registry=https://bcr.bazel.build'
+          } >> kernel-work/kernel_platform/.bazelrc
           find kernel-work -maxdepth 2 -type f | sort | head -80
           du -sh kernel-work
 
