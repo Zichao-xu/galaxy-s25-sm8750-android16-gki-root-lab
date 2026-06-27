@@ -67,8 +67,16 @@ jobs:
           tar -xzf build-tools-path-linux-x86.tar.gz \
             -C kernel-work/kernel_platform/prebuilts/build-tools/path/linux-x86
           ln -sf /usr/bin/python3 kernel-work/kernel_platform/prebuilts/build-tools/path/linux-x86/python3
-          test -d kernel-work/kernel_platform/prebuilts/build-tools/linux-x86/build-tools/sysroot
           test -x kernel-work/kernel_platform/prebuilts/build-tools/linux-x86/bin/toybox
+          mkdir -p kernel-work/kernel_platform/prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8/sysroot
+          curl -L --fail --retry 3 --retry-delay 10 \
+            -o gcc-glibc-sysroot.tar.gz \
+            https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8/+archive/refs/tags/android-15.0.0_r3/sysroot.tar.gz
+          tar -xzf gcc-glibc-sysroot.tar.gz \
+            -C kernel-work/kernel_platform/prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8/sysroot
+          ln -sfn ../../../prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8/sysroot \
+            kernel-work/kernel_platform/build/kernel/build-tools/sysroot
+          test -d kernel-work/kernel_platform/build/kernel/build-tools/sysroot/usr/include
           mkdir -p kernel-work/kernel_platform/prebuilts/clang/host/linux-x86/clang-r510928
           curl -L --fail --retry 3 --retry-delay 10 \
             -o clang-r510928.tar.gz \
