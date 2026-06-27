@@ -56,6 +56,15 @@ jobs:
           mkdir -p kernel-work/out/target/product/psq
           mkdir -p kernel-work/kernel_platform/prebuilts/build-tools/linux-x86
           curl -L --fail --retry 3 --retry-delay 10 \
+            https://android.googlesource.com/platform/prebuilts/build-tools/+/refs/tags/android-15.0.0_r3/BUILD.bazel?format=TEXT \
+            | base64 --decode > kernel-work/kernel_platform/prebuilts/build-tools/BUILD.bazel
+          mkdir -p kernel-work/kernel_platform/prebuilts/build-tools/common
+          curl -L --fail --retry 3 --retry-delay 10 \
+            -o build-tools-common.tar.gz \
+            https://android.googlesource.com/platform/prebuilts/build-tools/+archive/refs/tags/android-15.0.0_r3/common.tar.gz
+          tar -xzf build-tools-common.tar.gz \
+            -C kernel-work/kernel_platform/prebuilts/build-tools/common
+          curl -L --fail --retry 3 --retry-delay 10 \
             -o build-tools-linux-x86.tar.gz \
             https://android.googlesource.com/platform/prebuilts/build-tools/+archive/refs/tags/android-15.0.0_r3/linux-x86.tar.gz
           tar -xzf build-tools-linux-x86.tar.gz \
@@ -67,6 +76,8 @@ jobs:
           tar -xzf build-tools-path-linux-x86.tar.gz \
             -C kernel-work/kernel_platform/prebuilts/build-tools/path/linux-x86
           ln -sf /usr/bin/python3 kernel-work/kernel_platform/prebuilts/build-tools/path/linux-x86/python3
+          test -f kernel-work/kernel_platform/prebuilts/build-tools/BUILD.bazel
+          test -d kernel-work/kernel_platform/prebuilts/build-tools/common/bison
           test -x kernel-work/kernel_platform/prebuilts/build-tools/linux-x86/bin/toybox
           mkdir -p kernel-work/kernel_platform/prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8/sysroot
           curl -L --fail --retry 3 --retry-delay 10 \
