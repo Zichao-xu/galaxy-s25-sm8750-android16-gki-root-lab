@@ -88,6 +88,17 @@ jobs:
           ln -sfn ../../../prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8/sysroot \
             kernel-work/kernel_platform/build/kernel/build-tools/sysroot
           test -d kernel-work/kernel_platform/build/kernel/build-tools/sysroot/usr/include
+          curl -L --fail --retry 3 --retry-delay 10 \
+            https://android.googlesource.com/kernel/prebuilts/build-tools/+/refs/tags/android-15.0.0_r0.2/BUILD.bazel?format=TEXT \
+            | base64 --decode > kernel-work/kernel_platform/prebuilts/kernel-build-tools/BUILD.bazel
+          mkdir -p kernel-work/kernel_platform/prebuilts/kernel-build-tools/linux-x86
+          curl -L --fail --retry 3 --retry-delay 10 \
+            -o kernel-build-tools-linux-x86.tar.gz \
+            https://android.googlesource.com/kernel/prebuilts/build-tools/+archive/refs/tags/android-15.0.0_r0.2/linux-x86.tar.gz
+          tar -xzf kernel-build-tools-linux-x86.tar.gz \
+            -C kernel-work/kernel_platform/prebuilts/kernel-build-tools/linux-x86
+          test -f kernel-work/kernel_platform/prebuilts/kernel-build-tools/BUILD.bazel
+          test -x kernel-work/kernel_platform/prebuilts/kernel-build-tools/linux-x86/bin/avbtool
           mkdir -p kernel-work/kernel_platform/prebuilts/clang/host/linux-x86/clang-r510928
           curl -L --fail --retry 3 --retry-delay 10 \
             -o clang-r510928.tar.gz \
