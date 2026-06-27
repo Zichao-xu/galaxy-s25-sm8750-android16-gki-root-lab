@@ -52,6 +52,11 @@ jobs:
           tar -xzf samsung-source/Kernel.tar.gz -C kernel-work
           mkdir -p kernel-work/kernel_platform/prebuilts/build-tools/path/linux-x86
           ln -sf /usr/bin/python3 kernel-work/kernel_platform/prebuilts/build-tools/path/linux-x86/python3
+          mkdir -p kernel-work/kernel_platform/prebuilts/kernel-build-tools/bazel/linux-x86_64
+          curl -L \
+            -o kernel-work/kernel_platform/prebuilts/kernel-build-tools/bazel/linux-x86_64/bazel \
+            https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64
+          chmod +x kernel-work/kernel_platform/prebuilts/kernel-build-tools/bazel/linux-x86_64/bazel
           find kernel-work -maxdepth 2 -type f | sort | head -80
           du -sh kernel-work
 
