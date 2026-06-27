@@ -54,8 +54,21 @@ jobs:
             kernel-work/kernel_platform/common/Makefile \
             kernel-work/kernel_platform/msm-kernel/Makefile
           mkdir -p kernel-work/out/target/product/psq
+          mkdir -p kernel-work/kernel_platform/prebuilts/build-tools/linux-x86
+          curl -L --fail --retry 3 --retry-delay 10 \
+            -o build-tools-linux-x86.tar.gz \
+            https://android.googlesource.com/platform/prebuilts/build-tools/+archive/refs/tags/android-15.0.0_r3/linux-x86.tar.gz
+          tar -xzf build-tools-linux-x86.tar.gz \
+            -C kernel-work/kernel_platform/prebuilts/build-tools/linux-x86
           mkdir -p kernel-work/kernel_platform/prebuilts/build-tools/path/linux-x86
+          curl -L --fail --retry 3 --retry-delay 10 \
+            -o build-tools-path-linux-x86.tar.gz \
+            https://android.googlesource.com/platform/prebuilts/build-tools/+archive/refs/tags/android-15.0.0_r3/path/linux-x86.tar.gz
+          tar -xzf build-tools-path-linux-x86.tar.gz \
+            -C kernel-work/kernel_platform/prebuilts/build-tools/path/linux-x86
           ln -sf /usr/bin/python3 kernel-work/kernel_platform/prebuilts/build-tools/path/linux-x86/python3
+          test -d kernel-work/kernel_platform/prebuilts/build-tools/linux-x86/build-tools/sysroot
+          test -x kernel-work/kernel_platform/prebuilts/build-tools/linux-x86/bin/toybox
           mkdir -p kernel-work/kernel_platform/prebuilts/clang/host/linux-x86/clang-r510928
           curl -L --fail --retry 3 --retry-delay 10 \
             -o clang-r510928.tar.gz \
